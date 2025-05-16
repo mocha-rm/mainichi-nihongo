@@ -1,0 +1,38 @@
+package com.jhlab.mainichi_nihongo.domain.subscriber.service;
+
+import com.jhlab.mainichi_nihongo.domain.subscriber.entity.Subscriber;
+import com.jhlab.mainichi_nihongo.domain.subscriber.repository.SubscriberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class SubscribeService {
+    private final SubscriberRepository subscriberRepository;
+
+    public void subscribe(String email) {
+        if (!isValidEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일입니다.");
+        }
+
+        if (subscriberRepository.existsByEmail(email)) {
+            // 이미 구독하고 있는 이메일
+            return;
+        }
+
+        subscriberRepository.save(new Subscriber(email));
+    }
+
+    public void unsubscribe(String email) {
+        Subscriber subscriber = subscriberRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "등록되지 않은 이메일입니다."));
+
+        subscriberRepository.delete(subscriber);
+    }
+
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+}
