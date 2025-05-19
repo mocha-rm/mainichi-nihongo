@@ -1,6 +1,7 @@
-package com.jhlab.mainichi_nihongo.domain.subscriber.controller;
+package com.jhlab.mainichi_nihongo.domain.subscribe.controller;
 
-import com.jhlab.mainichi_nihongo.domain.subscriber.service.SubscribeService;
+import com.jhlab.mainichi_nihongo.domain.subscribe.dto.SubscribeRequestDto;
+import com.jhlab.mainichi_nihongo.domain.subscribe.service.SubscribeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class SubscribeController {
     private final SubscribeService subscribeService;
 
     @PostMapping("/subscribe")
-    public ResponseEntity<String> subscribe(@RequestBody String email) {
-        subscribeService.subscribe(email);
+    public ResponseEntity<String> subscribe(@RequestBody SubscribeRequestDto requestDto) {
+        subscribeService.subscribe(requestDto.email());
         return new ResponseEntity<>("구독 완료! 감사합니다.", HttpStatus.OK);
     }
 
