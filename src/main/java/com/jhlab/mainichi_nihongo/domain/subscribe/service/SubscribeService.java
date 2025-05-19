@@ -1,7 +1,7 @@
-package com.jhlab.mainichi_nihongo.domain.subscriber.service;
+package com.jhlab.mainichi_nihongo.domain.subscribe.service;
 
-import com.jhlab.mainichi_nihongo.domain.subscriber.entity.Subscriber;
-import com.jhlab.mainichi_nihongo.domain.subscriber.repository.SubscriberRepository;
+import com.jhlab.mainichi_nihongo.domain.subscribe.entity.Subscriber;
+import com.jhlab.mainichi_nihongo.domain.subscribe.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ public class SubscribeService {
         }
 
         if (subscriberRepository.existsByEmail(email)) {
-            // 이미 구독하고 있는 이메일
             return;
         }
 
@@ -33,6 +32,6 @@ public class SubscribeService {
     }
 
     private boolean isValidEmail(String email) {
-        return email != null && email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        return email != null && email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$");
     }
 }

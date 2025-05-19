@@ -1,4 +1,4 @@
-package com.jhlab.mainichi_nihongo.domain.subscriber.entity;
+package com.jhlab.mainichi_nihongo.domain.subscribe.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
