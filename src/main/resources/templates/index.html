@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이니치 니홍고 - 매일 새로운 일본어와 만나요!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0f3460;
+            --secondary-color: #533483;
+            --accent-color: #e94560;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            --hover-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .header h1 {
+            font-family: 'Gaegu', cursive;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-family: 'Gaegu', cursive;
+            color: rgba(255,255,255,0.9);
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.15);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .tag:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro-section h2 {
+            font-family: 'Gaegu', cursive;
+            color: var(--primary-color);
+            font-size: 36px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-section p {
+            color: var(--text-color);
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .feature h3 {
+            font-family: 'Gaegu', cursive;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .feature p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .subscription-form {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .subscription-form h3 {
+            font-family: 'Gaegu', cursive;
+            font-size: 32px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .form-group button {
+            padding: 15px 35px;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+            font-family: 'Gaegu', cursive;
+        }
+
+        .form-group button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stats p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 500;
+            font-family: 'Gaegu', cursive;
+        }
+
+        .content-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .content-tab {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            font-family: 'Gaegu', cursive;
+        }
+
+        .content-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .content-tab.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .word-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .word-card strong {
+            font-family: 'Gaegu', cursive;
+            color: var(--primary-color);
+            font-size: 24px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .word-card .pronunciation {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: 'Gaegu', cursive;
+        }
+
+        .word-card .meaning {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .word-card .example {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 40px;
+            font-family: 'Gaegu', cursive;
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 18px;
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .header p {
+                font-size: 20px;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .content-tab {
+                width: 100%;
+            }
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-align: center;
+            min-width: 300px;
+            animation: popupFadeIn 0.3s ease;
+        }
+
+        .alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            animation: overlayFadeIn 0.3s ease;
+        }
+
+        .alert-success {
+            border-top: 5px solid #52c41a;
+        }
+
+        .alert-error {
+            border-top: 5px solid #e94560;
+        }
+
+        .alert h3 {
+            font-family: 'Gaegu', cursive;
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .alert p {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .alert button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Gaegu', cursive;
+        }
+
+        .alert button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @keyframes popupFadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @keyframes overlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🌸 마이니치 니홍고 🌸</h1>
+            <p>매일 새로운 일본어와 만나는 시간!</p>
+            <div class="tags">
+                <span class="tag">🗾 일본 문화</span>
+                <span class="tag">💬 방언 탐방</span>
+                <span class="tag">📚 오늘의 단어</span>
+                <span class="tag">🎌 생생한 일본어</span>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <!-- 알림 메시지 -->
+            <div th:if="${successMessage}" class="alert-overlay" id="alertOverlay">
+                <div class="alert alert-success" id="alertBox">
+                    <h3>🎉 구독 완료!</h3>
+                    <p th:text="${successMessage}"></p>
+                    <button onclick="closeAlert()">확인</button>
+                </div>
+            </div>
+            <div th:if="${errorMessage}" class="alert-overlay" id="alertOverlay">
+                <div class="alert alert-error" id="alertBox">
+                    <h3>😢 오류 발생</h3>
+                    <p th:text="${errorMessage}"></p>
+                    <button onclick="closeAlert()">확인</button>
+                </div>
+            </div>
+
+            <!-- 소개 섹션 -->
+            <div class="intro-section">
+                <h2>일본어 학습의 새로운 경험</h2>
+                <p>매일 아침, 여러분의 이메일로 전해지는 특별한 일본어 레슨</p>
+                <p>단순한 단어 암기가 아닌, 살아있는 일본 문화와 함께하는 진짜 일본어를 만나보세요</p>
+                <p>오사카 방언부터 도쿄 표준어까지, 다양한 일본어의 매력을 발견할 수 있습니다</p>
+            </div>
+
+            <!-- 특징 섹션 -->
+            <div class="features">
+                <div class="feature">
+                    <h3>📅 매일 새로운 콘텐츠</h3>
+                    <p>매일 다른 주제로 구성된 흥미로운 일본어 학습 콘텐츠를 받아보세요</p>
+                </div>
+                <div class="feature">
+                    <h3>🏛️ 문화와 함께</h3>
+                    <p>언어뿐만 아니라 일본의 문화, 관습, 생활까지 함께 배울 수 있어요</p>
+                </div>
+                <div class="feature">
+                    <h3>🗣️ 실용적인 표현</h3>
+                    <p>교과서에서 배울 수 없는 실제 일본인들이 사용하는 생생한 표현들</p>
+                </div>
+                <div class="feature">
+                    <h3>📍 지역별 방언</h3>
+                    <p>오사카, 교토, 히로시마 등 다양한 지역의 독특한 방언도 만나보세요</p>
+                </div>
+            </div>
+
+            <!-- 구독 폼 -->
+            <div class="subscription-form">
+                <h3>🎯 지금 바로 시작하세요!</h3>
+                <p>무료로 매일 아침 새로운 일본어를 받아보세요</p>
+                
+                <form th:action="@{/subscribe}" method="post">
+                    <div class="form-group">
+                        <input type="email" 
+                               name="email" 
+                               placeholder="이메일 주소를 입력하세요" 
+                               required 
+                               th:value="${email}">
+                        <button type="submit">구독하기</button>
+                    </div>
+                </form>
+
+                <div class="stats">
+                    <p>🌟 현재 <strong th:text="${subscriberCount}">0</strong>명이 함께 학습하고 있어요!</p>
+                </div>
+            </div>
+
+            <!-- 샘플 콘텐츠 미리보기 -->
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin-top: 30px;">
+                <h3 style="color: #333; margin-bottom: 20px; text-align: center;">📖 콘텐츠 미리보기</h3>
+                
+                <!-- 콘텐츠 탭 메뉴 -->
+                <div class="content-tabs">
+                    <button class="content-tab active" data-tab="words">📝 핵심 단어</button>
+                    <button class="content-tab" data-tab="conversation">💬 실전 회화</button>
+                    <button class="content-tab" data-tab="culture">🎭 일본 문화</button>
+                    <button class="content-tab" data-tab="dialect">🗾 방언 탐방</button>
+                </div>
+
+                <!-- 핵심 단어 섹션 -->
+                <div id="words-content" class="content-section active">
+                    <div style="background: #f8f9fa; border: 2px solid #0f3460; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #0f3460; margin: 0 0 15px 0; display: flex; align-items: center;">
+                            <span style="background: #0f3460; color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">📝</span>
+                            오늘의 핵심 단어
+                        </h3>
+                        <div style="display: grid; gap: 15px;">
+                            <div class="word-card">
+                                <strong>一期一会 (いちごいちえ)</strong>
+                                <span class="pronunciation">이치고이치에</span>
+                                <span class="meaning">일생에 한 번뿐인 만남</span>
+                                <div class="example">
+                                    일본 다도(茶道)에서 유래한 말로, 모든 만남을 소중히 여기는 마음을 담고 있어요.
+                                </div>
+                            </div>
+                            <div class="word-card">
+                                <strong>木漏れ日 (こもれび)</strong>
+                                <span class="pronunciation">코모레비</span>
+                                <span class="meaning">나뭇잎 사이로 비치는 햇살</span>
+                                <div class="example">
+                                    일본의 아름다운 자연을 표현하는 대표적인 단어 중 하나예요.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 실전 회화 섹션 -->
+                <div id="conversation-content" class="content-section">
+                    <div style="background: #f0f8ff; border: 2px solid #4a90e2; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #4a90e2; margin: 0 0 15px 0; display: flex; align-items: center;">
+                            <span style="background: #4a90e2; color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">💬</span>
+                            바로 써먹는 실전 회화
+                        </h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
+                            <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 퇴근 시간, 동료와 헤어질 때</p>
+                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> おつかれさま。また明日！</p>
+                            <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> Otsukaresama. Mata ashita!</p>
+                            <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 수고하셨어요. 내일 봐요!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 일본 문화 섹션 -->
+                <div id="culture-content" class="content-section">
+                    <div style="background: #f0fff4; border: 2px solid #52c41a; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #52c41a; margin: 0 0 15px 0; display: flex; align-items: center;">
+                            <span style="background: #52c41a; color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🎭</span>
+                            오늘의 일본 문화 TMI
+                        </h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #52c41a;">
+                            <p style="margin: 0; line-height: 1.6; color: #333;">
+                                'おつかれさま'는 단순한 인사말이 아닌, 일본 직장 문화의 핵심을 보여주는 표현입니다. 
+                                상대방의 노력과 수고를 인정하고 존중하는 마음을 담고 있어요. 
+                                특히 일본에서는 퇴근할 때 이 말을 하지 않으면 예의가 없다고 여겨질 정도로 중요한 표현이랍니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 방언 탐방 섹션 -->
+                <div id="dialect-content" class="content-section">
+                    <div style="background: #fff0f6; border: 2px solid #eb2f96; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #eb2f96; margin: 0 0 15px 0; display: flex; align-items: center;">
+                            <span style="background: #eb2f96; color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🗾</span>
+                            오늘의 방언 탐방
+                        </h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
+                            <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 오사카</p>
+                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> おつかれやん (Otsukarey-an)</p>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> おつかれさま (Otsukaresama)</p>
+                            <p style="margin: 0; color: #333;"><strong>의미:</strong> 수고하셨어요 (오사카식)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <p>
+                이미 구독 중이신가요? 
+                <a th:href="@{/unsubscribe}">구독 취소하기</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+                © 2025 마이니치 니홍고. 매일 새로운 일본어와 함께하세요.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 초기 탭 설정
+            showContentTab('words');
+
+            // 탭 클릭 이벤트 리스너 추가
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    showContentTab(tabName);
+                });
+            });
+
+            // 알림 메시지가 있으면 팝업 표시
+            const alertOverlay = document.getElementById('alertOverlay');
+            if (alertOverlay) {
+                alertOverlay.style.display = 'block';
+                document.getElementById('alertBox').style.display = 'block';
+            }
+        });
+
+        function showContentTab(tabName) {
+            // 모든 탭과 콘텐츠 숨기기
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 선택된 탭과 콘텐츠 보이기
+            document.querySelector(`.content-tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-content`).classList.add('active');
+        }
+
+        function closeAlert() {
+            const alertOverlay = document.getElementById('alertOverlay');
+            if (alertOverlay) {
+                alertOverlay.style.display = 'none';
+                document.getElementById('alertBox').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 
