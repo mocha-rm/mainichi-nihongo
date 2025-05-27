@@ -57,7 +57,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
           DOCKERHUB_IMAGE_TAG_NAME: ${{ vars.DOCKERHUB_IMAGE_TAG_NAME }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_ROOT_DATABASE: ${{ secrets.MYSQL_ROOT_DATABASE }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -71,7 +71,7 @@ jobs:
             echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}" > .env
             echo "DOCKERHUB_IMAGE_TAG_NAME=${DOCKERHUB_IMAGE_TAG_NAME}" >> .env
             echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
-            echo "MYSQL_ROOT_DATABASE=${MYSQL_ROOT_DATABASE}" >> .env
+            echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
             echo "DB_URL=${DB_URL}" >> .env
             echo "DB_USER=${DB_USER}" >> .env
             echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
