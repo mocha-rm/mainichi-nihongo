@@ -26,6 +26,8 @@ services:
       SMTP_EMAIL: ${SMTP_EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
 volumes:
   db_data:
