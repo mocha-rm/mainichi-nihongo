@@ -20,7 +20,7 @@ public class EmailScheduler {
     private final SubscribeService subscribeService;
     private final ContentService contentService;
 
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0 8 * * ?", zone = "Asia/Seoul")
     public void sendDailyEmailToSubscribers() {
         log.info("일일 이메일 발송 작업 시작: {}", LocalDateTime.now());
 
