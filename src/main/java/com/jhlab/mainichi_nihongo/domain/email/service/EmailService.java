@@ -1,6 +1,5 @@
 package com.jhlab.mainichi_nihongo.domain.email.service;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class EmailService {
             log.info("이메일이 성공적으로 발송되었습니다. 수신자 {}", to);
             return true;
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("이메일 전송 실패: {}", e.getMessage());
             return false;
         }

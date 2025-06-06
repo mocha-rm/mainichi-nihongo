@@ -41,6 +41,9 @@ public class ContentService {
     @Value("${app.unsubscribe.url:http://mainichi-nihongo.com/unsubscribe}")
     private String unsubscribeUrl;
 
+    @Value("${app.server-url}")
+    private String serverUrl;
+
     /**
      * 일본어 JLPT 레벨 목록
      */
@@ -70,6 +73,8 @@ public class ContentService {
         ContentTheme theme = getOrCreateTheme();
 
         String htmlContent = geminiService.generateContent(theme.getJLPTLevel(), theme.getTopic());
+
+        htmlContent = htmlContent.replace("/api/tts", serverUrl + "/api/tts");
 
         EmailContent emailContent = new EmailContent(theme, htmlContent);
         emailContentRepository.save(emailContent);
