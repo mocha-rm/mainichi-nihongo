@@ -26,6 +26,8 @@ services:
       SMTP_EMAIL: ${SMTP_EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
+      SERVER_URL: ${SERVER_URL}
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     volumes:
       - /etc/localtime:/etc/localtime:ro
 

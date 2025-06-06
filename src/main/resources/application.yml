@@ -45,3 +45,11 @@ server:
 gemini:
   api-key: ${GEMINI_API_KEY}
   url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+
+app:
+  server-url: ${SERVER_URL}
+
+google:
+  cloud:
+    text-to-speech:
+      credentials: ${GOOGLE_APPLICATION_CREDENTIALS}
