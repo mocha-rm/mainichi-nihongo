@@ -64,7 +64,6 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
-          GOOGLE_APPLICATION_CREDENTIALS: /home/ubuntu/api/mainichi-nihongo-460709-dbe1b498b089.json
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
             cd /home/ubuntu
@@ -79,8 +78,7 @@ jobs:
             echo "SMTP_EMAIL=${SMTP_EMAIL}" >> .env
             echo "SMTP_PASSWORD=${SMTP_PASSWORD}" >> .env
             echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
-            echo "SERVER_URL=${SERVER_URL}" >> .env
-            echo "GOOGLE_APPLICATION_CREDENTIALS=/home/ubuntu/api/mainichi-nihongo-460709-dbe1b498b089.json" >> .env
+            echo "SERVER_URL=${SERVER_URL}" >> .env        
             
           
             echo "환경 변수 확인:"
