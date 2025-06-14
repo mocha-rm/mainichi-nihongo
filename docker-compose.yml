@@ -30,7 +30,7 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: /credentials/mainichi-nihongo-460709-dbe1b498b089.json
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/ubuntu/api:/credentials:ro
+      - /home/pjh/api:/credentials:ro
 
 volumes:
   db_data:
