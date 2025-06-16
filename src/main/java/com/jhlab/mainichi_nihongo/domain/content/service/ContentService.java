@@ -59,9 +59,8 @@ public class ContentService {
     );
 
     /**
-     * 오늘의 일본어 학습 콘텐츠를 생성하고 저장
+     * 오늘의 일본어 학습 콘텐츠를 생성
      */
-    @Transactional
     public String generateDailyContent() {
         Optional<EmailContent> todayContent = emailContentRepository.findByCreatedDate(LocalDateTime.now());
 
@@ -73,9 +72,16 @@ public class ContentService {
         ContentTheme theme = getOrCreateTheme();
 
         String htmlContent = geminiService.generateContent(theme.getJLPTLevel(), theme.getTopic());
-
         htmlContent = htmlContent.replace("/api/tts", serverUrl + "/api/tts");
 
+        return saveContent(theme, htmlContent);
+    }
+
+    /**
+     * 오늘의 일본어 학습 콘텐츠를 저장
+     */
+    @Transactional
+    public String saveContent(ContentTheme theme, String htmlContent) {
         EmailContent emailContent = new EmailContent(theme, htmlContent);
         emailContentRepository.save(emailContent);
 
@@ -83,7 +89,6 @@ public class ContentService {
         contentThemeRepository.save(theme);
 
         log.info("새로운 일본어 학습 콘텐츠가 생성되었습니다. 테마: {} {}", theme.getJLPTLevel(), theme.getTopic());
-
         return applyEmailTemplate(htmlContent);
     }
 
