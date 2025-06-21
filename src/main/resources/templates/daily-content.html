@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 일본어 - 마이니치 니홍고</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0f3460;
+            --secondary-color: #533483;
+            --accent-color: #e94560;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            --hover-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-family: 'Gaegu', cursive;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-family: 'Gaegu', cursive;
+            color: rgba(255,255,255,0.9);
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .content-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .section-header.words {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+        }
+
+        .section-header.conversation {
+            background: linear-gradient(45deg, #4a90e2, #7b68ee);
+        }
+
+        .section-header.culture {
+            background: linear-gradient(45deg, #52c41a, #73d13d);
+        }
+
+        .section-header.dialect {
+            background: linear-gradient(45deg, #eb2f96, #f759ab);
+        }
+
+        .section-icon {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .word-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .japanese-text {
+            display: inline-flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .tts-button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .tts-button:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .pronunciation {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .meaning {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .example {
+            color: #333;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .conversation-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4a90e2;
+            box-shadow: var(--card-shadow);
+        }
+
+        .conversation-situation {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .culture-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #52c41a;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .dialect-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #eb2f96;
+            box-shadow: var(--card-shadow);
+        }
+
+        .dialect-region {
+            color: #eb2f96;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .footer a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .header p {
+                font-size: 20px;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🌸 오늘의 일본어 🌸</h1>
+            <p>매일 새로운 일본어와 만나는 시간!</p>
+            <div class="content-info">
+                <p style="margin: 0; font-size: 18px;">
+                    📅 <strong th:text="${date}">2025년 01월 01일</strong> | 
+                    📚 <strong th:text="${level}">N3</strong> 레벨 | 
+                    🎯 <strong th:text="${topic}">인사말</strong> 주제
+                </p>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <!-- 핵심 단어 섹션 -->
+            <div class="content-section">
+                <div class="section-header words">
+                    <div class="section-icon">📝</div>
+                    오늘의 핵심 단어
+                </div>
+                <div th:utext="${wordsContent}">
+                    <!-- 동적으로 생성될 콘텐츠 -->
+                </div>
+            </div>
+
+            <!-- 실전 회화 섹션 -->
+            <div class="content-section">
+                <div class="section-header conversation">
+                    <div class="section-icon">💬</div>
+                    바로 써먹는 실전 회화
+                </div>
+                <div th:utext="${conversationContent}">
+                    <!-- 동적으로 생성될 콘텐츠 -->
+                </div>
+            </div>
+
+            <!-- 일본 문화 섹션 -->
+            <div class="content-section">
+                <div class="section-header culture">
+                    <div class="section-icon">🎭</div>
+                    오늘의 일본 문화 TMI
+                </div>
+                <div th:utext="${cultureContent}">
+                    <!-- 동적으로 생성될 콘텐츠 -->
+                </div>
+            </div>
+
+            <!-- 방언 탐방 섹션 -->
+            <div class="content-section">
+                <div class="section-header dialect">
+                    <div class="section-icon">🗾</div>
+                    오늘의 방언 탐방
+                </div>
+                <div th:utext="${dialectContent}">
+                    <!-- 동적으로 생성될 콘텐츠 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <p>
+                <a th:href="@{/}">메인 페이지로 돌아가기</a> | 
+                <a th:href="@{/unsubscribe}">구독 취소하기</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+                © 2025 마이니치 니홍고. 매일 새로운 일본어와 함께하세요.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function playTTS(text) {
+            const audio = new Audio(`/api/tts/audio?text=${encodeURIComponent(text)}`);
+            audio.play().catch(error => {
+                console.error('TTS 재생 중 오류:', error);
+                alert('TTS 재생에 실패했습니다. 다시 시도해주세요.');
+            });
+        }
+    </script>
+</body>
+</html> 

@@ -333,6 +333,27 @@
             line-height: 1.6;
         }
 
+        .tts-button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: color 0.3s ease;
+            padding: 2px;
+        }
+
+        .tts-button:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+        }
+
+        .japanese-text {
+            display: inline-flex;
+            align-items: center;
+        }
+
         .footer {
             text-align: center;
             color: rgba(255, 255, 255, 0.8);
@@ -569,7 +590,9 @@
                         </h3>
                         <div style="display: grid; gap: 15px;">
                             <div class="word-card">
-                                <strong>一期一会 (いちごいちえ)</strong>
+                                <strong class="japanese-text">一期一会 (いちごいちえ) 
+                                    <button class="tts-button" onclick="playTTS('一期一会')">🔊</button>
+                                </strong>
                                 <span class="pronunciation">이치고이치에</span>
                                 <span class="meaning">일생에 한 번뿐인 만남</span>
                                 <div class="example">
@@ -577,7 +600,9 @@
                                 </div>
                             </div>
                             <div class="word-card">
-                                <strong>木漏れ日 (こもれび)</strong>
+                                <strong class="japanese-text">木漏れ日 (こもれび) 
+                                    <button class="tts-button" onclick="playTTS('木漏れ日')">🔊</button>
+                                </strong>
                                 <span class="pronunciation">코모레비</span>
                                 <span class="meaning">나뭇잎 사이로 비치는 햇살</span>
                                 <div class="example">
@@ -597,7 +622,9 @@
                         </h3>
                         <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
                             <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 퇴근 시간, 동료와 헤어질 때</p>
-                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> おつかれさま。また明日！</p>
+                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">おつかれさま。また明日！ 
+                                <button class="tts-button" onclick="playTTS('おつかれさま。また明日！')">🔊</button>
+                            </span></p>
                             <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> Otsukaresama. Mata ashita!</p>
                             <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 수고하셨어요. 내일 봐요!</p>
                         </div>
@@ -630,7 +657,9 @@
                         </h3>
                         <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
                             <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 오사카</p>
-                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> おつかれやん (Otsukarey-an)</p>
+                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">おつかれやん (Otsukarey-an) 
+                                <button class="tts-button" onclick="playTTS('おつかれやん')">🔊</button>
+                            </span></p>
                             <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> おつかれさま (Otsukaresama)</p>
                             <p style="margin: 0; color: #333;"><strong>의미:</strong> 수고하셨어요 (오사카식)</p>
                         </div>
@@ -692,6 +721,14 @@
                 alertOverlay.style.display = 'none';
                 document.getElementById('alertBox').style.display = 'none';
             }
+        }
+
+        function playTTS(text) {
+            const audio = new Audio(`/api/tts/audio?text=${encodeURIComponent(text)}`);
+            audio.play().catch(error => {
+                console.error('TTS 재생 중 오류:', error);
+                alert('TTS 재생에 실패했습니다. 다시 시도해주세요.');
+            });
         }
     </script>
 </body>

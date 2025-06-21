@@ -20,6 +20,12 @@ public interface EmailContentRepository extends JpaRepository<EmailContent, Long
     Optional<EmailContent> findByCreatedDate(LocalDateTime dateTime);
 
     /**
+     * 특정 날짜 범위에 생성된 이메일 콘텐츠를 찾습니다.
+     */
+    @Query("SELECT e FROM EmailContent e WHERE e.createdAt BETWEEN ?1 AND ?2")
+    Optional<EmailContent> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    /**
      * 마지막으로 발송된 이메일 콘텐츠를 가져옵니다.
      */
     Optional<EmailContent> findTopBySentTrueOrderBySentAtDesc();

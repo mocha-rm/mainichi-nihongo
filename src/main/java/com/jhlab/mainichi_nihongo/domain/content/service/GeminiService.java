@@ -89,6 +89,7 @@ public class GeminiService {
                 
                 🎯 콘텐츠 구성 (다음 HTML 구조를 정확히 따라주세요):
                 
+                <!-- 핵심 단어 섹션 -->
                 <div style="font-family: 'Noto Sans KR', Arial, sans-serif; line-height: 1.7; color: #333;">
                     <!-- 오늘의 핵심 단어들 -->
                     <div style="background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center;">
@@ -104,95 +105,88 @@ public class GeminiService {
                         </h3>
                         <div style="display: grid; gap: 12px;">
                             <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #ffa726;">
-                                <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>일본어:</strong> <span class="japanese-text">단어/문장 <a href="/api/tts?text=단어/문장" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
+                                <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>일본어:</strong> <span class="japanese-text">단어/문장 <button class="tts-button" onclick="playTTS('단어/문장')">🔊</button></span></p>
                                 <p style="margin: 0 0 5px 0; color: #666;"><strong>발음:</strong> 로마자 발음</p>
                                 <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
                             </div>
                         </div>
                     </div>
+                </div>
                 
-                    <!-- 실전 회화 섹션 -->
-                    <div style="background: #f0f8ff; border: 2px solid #4a90e2; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                        <h3 style="color: #4a90e2; margin: 0 0 15px 0; display: flex; align-items: center;">
-                            <span style="background: #4a90e2; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">💬</span>
-                            바로 써먹는 실전 회화
-                        </h3>
-                        <div style="display: grid; gap: 15px;">
-                            <!-- 첫 번째 예문 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
-                                <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 1</p>
-                                <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 1 <a href="/api/tts?text=회화문1" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 1</p>
-                                <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 1</p>
-                            </div>
-                            
-                            <!-- 두 번째 예문 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
-                                <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 2</p>
-                                <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 2 <a href="/api/tts?text=회화문2" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 2</p>
-                                <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 2</p>
-                            </div>
-                            
-                            <!-- 세 번째 예문 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
-                                <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 3</p>
-                                <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 3 <a href="/api/tts?text=회화문3" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 3</p>
-                                <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 3</p>
-                            </div>
+                <!-- 실전 회화 섹션 -->
+                <div style="background: #f0f8ff; border: 2px solid #4a90e2; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="color: #4a90e2; margin: 0 0 15px 0; display: flex; align-items: center;">
+                        <span style="background: #4a90e2; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">💬</span>
+                        바로 써먹는 실전 회화
+                    </h3>
+                    <div style="display: grid; gap: 15px;">
+                        <!-- 첫 번째 예문 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
+                            <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 1</p>
+                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 1 <button class="tts-button" onclick="playTTS('회화문1')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 1</p>
+                            <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 1</p>
+                        </div>
+                        
+                        <!-- 두 번째 예문 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
+                            <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 2</p>
+                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 2 <button class="tts-button" onclick="playTTS('회화문2')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 2</p>
+                            <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 2</p>
+                        </div>
+                        
+                        <!-- 세 번째 예문 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4a90e2;">
+                            <p style="margin: 0 0 5px 0; font-size: 16px; color: #333;"><strong>상황:</strong> 상황 설명 3</p>
+                            <p style="margin: 0 0 8px 0; font-size: 18px; color: #2c3e50;"><strong>일본어:</strong> <span class="japanese-text">회화문 3 <button class="tts-button" onclick="playTTS('회화문3')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; font-style: italic; color: #7f8c8d;"><strong>발음:</strong> 로마자 발음 3</p>
+                            <p style="margin: 0; color: #e74c3c; font-weight: 500;"><strong>한국어:</strong> 한국어 번역 3</p>
                         </div>
                     </div>
+                </div>
                 
-                    <!-- 일본 문화 TMI 섹션 -->
-                    <div style="background: #f0fff4; border: 2px solid #52c41a; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                        <h3 style="color: #52c41a; margin: 0 0 15px 0; display: flex; align-items: center;">
-                            <span style="background: #52c41a; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🎭</span>
-                            오늘의 일본 문화 TMI
-                        </h3>
-                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #52c41a;">
-                            <p style="margin: 0; line-height: 1.6; color: #333;">흥미로운 일본 문화나 상식 내용</p>
-                        </div>
+                <!-- 일본 문화 TMI 섹션 -->
+                <div style="background: #f0fff4; border: 2px solid #52c41a; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="color: #52c41a; margin: 0 0 15px 0; display: flex; align-items: center;">
+                        <span style="background: #52c41a; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🎭</span>
+                        오늘의 일본 문화 TMI
+                    </h3>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #52c41a;">
+                        <p style="margin: 0; line-height: 1.6; color: #333;">흥미로운 일본 문화나 상식 내용</p>
                     </div>
+                </div>
                 
-                    <!-- 방언 탐방 섹션 -->
-                    <div style="background: #fff0f6; border: 2px solid #eb2f96; border-radius: 12px; padding: 20px;">
-                        <h3 style="color: #eb2f96; margin: 0 0 15px 0; display: flex; align-items: center;">
-                            <span style="background: #eb2f96; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🗾</span>
-                            오늘의 방언 탐방
-                        </h3>
-                        <div style="display: grid; gap: 15px;">
-                            <!-- 첫 번째 방언 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
-                                <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 도쿄</p>
-                                <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">도쿄 방언 <a href="/api/tts?text=도쿄방언" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
-                                <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
-                            </div>
+                <!-- 방언 탐방 섹션 -->
+                <div style="background: #fff0f6; border: 2px solid #eb2f96; border-radius: 12px; padding: 20px;">
+                    <h3 style="color: #eb2f96; margin: 0 0 15px 0; display: flex; align-items: center;">
+                        <span style="background: #eb2f96; color: white; border-radius: 50%%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px;">🗾</span>
+                        오늘의 방언 탐방
+                    </h3>
+                    <div style="display: grid; gap: 15px;">
+                        <!-- 첫 번째 방언 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
+                            <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 도쿄</p>
+                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">도쿄 방언 <button class="tts-button" onclick="playTTS('도쿄방언')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
+                            <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
+                        </div>
 
-                            <!-- 두 번째 방언 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
-                                <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 교토</p>
-                                <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">교토 방언 <a href="/api/tts?text=교토방언" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
-                                <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
-                            </div>
-
-                            <!-- 세 번째 방언 -->
-                            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
-                                <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 홋카이도</p>
-                                <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">홋카이도 방언 <a href="/api/tts?text=홋카이도방언" style="text-decoration: none; color: #666; margin-left: 5px;">🔊</a></span></p>
-                                <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
-                                <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
-                            </div>
+                        <!-- 두 번째 방언 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
+                            <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 교토</p>
+                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">교토 방언 <button class="tts-button" onclick="playTTS('교토방언')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
+                            <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
                         </div>
-                    </div>
-                
-                    <!-- 오늘의 격려 메시지 -->
-                    <div style="background: linear-gradient(45deg, #ff9a9e 0%%, #fecfef 100%%); padding: 15px; border-radius: 10px; text-align: center; margin-top: 20px;">
-                        <p style="margin: 0; color: #8e0e3e; font-weight: 500; font-size: 15px;">
-                            🌟 "작은 발걸음도 모이면 큰 여행이 됩니다!" - 오늘도 화이팅! 🌟
-                        </p>
+
+                        <!-- 세 번째 방언 -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #eb2f96;">
+                            <p style="margin: 0 0 8px 0; color: #eb2f96; font-weight: 600;">🏮 지역: 홋카이도</p>
+                            <p style="margin: 0 0 5px 0; font-size: 16px;"><strong>방언:</strong> <span class="japanese-text">홋카이도 방언 <button class="tts-button" onclick="playTTS('홋카이도방언')">🔊</button></span></p>
+                            <p style="margin: 0 0 5px 0; color: #666;"><strong>표준어:</strong> 표준 일본어</p>
+                            <p style="margin: 0; color: #333;"><strong>의미:</strong> 한국어 의미</p>
+                        </div>
                     </div>
                 </div>
                 

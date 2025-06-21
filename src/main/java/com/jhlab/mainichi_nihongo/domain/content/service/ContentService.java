@@ -35,7 +35,7 @@ public class ContentService {
     private final EmailContentRepository emailContentRepository;
     private final Random random = new Random();
 
-    @Value("classpath:templates/email-template.html")
+    @Value("classpath:templates/email-template-new.html")
     private Resource emailTemplateResource;
 
     @Value("${app.unsubscribe.url:http://mainichi-nihongo.com/unsubscribe}")
@@ -66,30 +66,29 @@ public class ContentService {
 
         if (todayContent.isPresent()) {
             log.info("오늘 이미 생성된 콘텐츠가 있습니다. ID: {}", todayContent.get().getId());
-            return applyEmailTemplate(todayContent.get().getHtmlContent());
+            return applyEmailTemplate(todayContent.get().getTheme());
         }
 
         ContentTheme theme = getOrCreateTheme();
-
-        String htmlContent = geminiService.generateContent(theme.getJLPTLevel(), theme.getTopic());
-        htmlContent = htmlContent.replace("/api/tts", serverUrl + "/api/tts");
-
-        return saveContent(theme, htmlContent);
+        return saveContent(theme);
     }
 
     /**
      * 오늘의 일본어 학습 콘텐츠를 저장
      */
     @Transactional
-    public String saveContent(ContentTheme theme, String htmlContent) {
-        EmailContent emailContent = new EmailContent(theme, htmlContent);
-        emailContentRepository.save(emailContent);
+    public String saveContent(ContentTheme theme) {
+        String detailedContent = geminiService.generateContent(theme.getJLPTLevel(), theme.getTopic());
+
+        EmailContent content = new EmailContent(theme, "");
+        content.setDetailedContent(detailedContent);
+        emailContentRepository.save(content);
 
         theme.markAsUsed();
         contentThemeRepository.save(theme);
 
         log.info("새로운 일본어 학습 콘텐츠가 생성되었습니다. 테마: {} {}", theme.getJLPTLevel(), theme.getTopic());
-        return applyEmailTemplate(htmlContent);
+        return applyEmailTemplate(theme);
     }
 
     private ContentTheme getOrCreateTheme() {
@@ -106,19 +105,23 @@ public class ContentService {
         return contentThemeRepository.save(newTheme);
     }
 
-    private String applyEmailTemplate(String contentHtml) {
+    private String applyEmailTemplate(ContentTheme theme) {
         try {
             String template = loadEmailTemplate();
 
             String formattedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+            String urlDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
             return template
                     .replace("${date}", formattedDate)
-                    .replace("${content}", contentHtml)
-                    .replace("${unsubscribeUrl}", unsubscribeUrl);
+                    .replace("${level}", theme.getJLPTLevel())
+                    .replace("${topic}", theme.getTopic())
+                    .replace("${unsubscribeUrl}", unsubscribeUrl)
+                    .replace("${serverUrl}", serverUrl)
+                    .replace("${urlDate}", urlDate);
         } catch (IOException e) {
             log.error("이메일 템플릿 적용 중 오류 발생: {}", e.getMessage());
-            return contentHtml;
+            return "이메일 템플릿 로드 중 오류가 발생했습니다.";
         }
     }
 
