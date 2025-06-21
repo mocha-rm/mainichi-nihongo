@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +35,10 @@ public class EmailContent {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String htmlContent;
+
+    @Setter
+    @Column(columnDefinition = "TEXT")
+    private String detailedContent;
 
     public EmailContent(ContentTheme theme, String htmlContent) {
         this.theme = theme;

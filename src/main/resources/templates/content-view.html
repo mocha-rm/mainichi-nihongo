@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 일본어 - 마이니치 니홍고</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0f3460;
+            --secondary-color: #533483;
+            --accent-color: #e94560;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            --hover-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-family: 'Gaegu', cursive;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-family: 'Gaegu', cursive;
+            color: rgba(255,255,255,0.9);
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .content-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .japanese-text {
+            display: inline-flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .tts-button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.3s ease;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .tts-button:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .footer a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .header p {
+                font-size: 20px;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🌸 오늘의 일본어 🌸</h1>
+            <p>매일 새로운 일본어와 만나는 시간!</p>
+            <div class="content-info">
+                <p style="margin: 0; font-size: 18px;">
+                    📅 <strong th:text="${date}">2025년 01월 01일</strong> | 
+                    📚 <strong th:text="${level}">N3</strong> 레벨 | 
+                    🎯 <strong th:text="${topic}">인사말</strong> 주제
+                </p>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <div th:utext="${content}">
+                <!-- 동적으로 생성될 콘텐츠 -->
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <p>
+                <a th:href="@{/}">메인 페이지로 돌아가기</a> | 
+                <a th:href="@{/unsubscribe}">구독 취소하기</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+                © 2025 마이니치 니홍고. 매일 새로운 일본어와 함께하세요.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function playTTS(text) {
+            console.log('TTS 재생 시도:', text);
+            const audioUrl = `/api/tts/audio?text=${encodeURIComponent(text)}`;
+            console.log('오디오 URL:', audioUrl);
+            
+            const audio = new Audio(audioUrl);
+            
+            audio.addEventListener('loadstart', () => console.log('오디오 로딩 시작'));
+            audio.addEventListener('canplay', () => console.log('오디오 재생 가능'));
+            audio.addEventListener('error', (e) => console.error('오디오 로딩 오류:', e));
+            
+            audio.play().then(() => {
+                console.log('TTS 재생 성공');
+            }).catch(error => {
+                console.error('TTS 재생 중 오류:', error);
+                alert('TTS 재생에 실패했습니다. 다시 시도해주세요.');
+            });
+        }
+    </script>
+</body>
+</html> 
