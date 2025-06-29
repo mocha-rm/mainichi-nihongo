@@ -3,7 +3,7 @@ name: Deploy to Oracle
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   build-and-push:
@@ -48,7 +48,7 @@ jobs:
 
       - name: Copy files to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml pjh@${{ secrets.ORACLE_HOST }}:/home/pjh/
+          scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml pjh@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
 
       - name: Deploy via SSH with environment variables
         env:
@@ -65,7 +65,7 @@ jobs:
           SERVER_URL: ${{ secrets.SERVER_URL }}
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem pjh@${{ secrets.ORACLE_HOST }} << EOF
-            cd /home/pjh
+            cd /home/ubuntu
           
             echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}" > .env
             echo "DOCKERHUB_IMAGE_TAG_NAME=${DOCKERHUB_IMAGE_TAG_NAME}" >> .env
@@ -78,7 +78,6 @@ jobs:
             echo "SMTP_PASSWORD=${SMTP_PASSWORD}" >> .env
             echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
             echo "SERVER_URL=${SERVER_URL}" >> .env        
-          
           
             echo "환경 변수 확인:"
             cat .env | grep DOCKERHUB
