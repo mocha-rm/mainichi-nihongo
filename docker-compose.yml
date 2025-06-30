@@ -68,7 +68,7 @@ services:
       NGINX_PROXY_CONTAINER: nginx-proxy
     networks:
       - nginx-proxy
-      -
+
 volumes:
   db_data:
   nginx_certs:
