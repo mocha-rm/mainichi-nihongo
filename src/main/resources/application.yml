@@ -39,6 +39,7 @@ spring:
       leak-detection-threshold: 60000
 
 server:
+  port: 8080
   error:
     include-message: always
 

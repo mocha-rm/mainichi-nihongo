@@ -49,6 +49,7 @@ jobs:
       - name: Copy files to Oracle
         run: |
           scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml ubuntu@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r ./nginx ubuntu@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
 
       - name: Deploy via SSH with environment variables
         env:
