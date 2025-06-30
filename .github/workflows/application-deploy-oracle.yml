@@ -46,9 +46,9 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add private_key.pem
 
-      - name: Copy files to EC2
+      - name: Copy files to Oracle
         run: |
-          scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml pjh@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
+          scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml ubuntu@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
 
       - name: Deploy via SSH with environment variables
         env:
@@ -64,7 +64,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem pjh@${{ secrets.ORACLE_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.ORACLE_HOST }} << EOF
             cd /home/ubuntu
           
             echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}" > .env
