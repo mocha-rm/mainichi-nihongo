@@ -3,7 +3,7 @@ name: Deploy to Oracle
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   build-and-push:
@@ -30,14 +30,33 @@ jobs:
             -t ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_IMAGE_TAG_NAME }}:latest \
             --push .
 
-  deploy:
-    name: Deploy to Oracle
+  deploy-db:
+    name: Deploy MySQL to DB Server
     runs-on: ubuntu-latest
-    needs: build-and-push
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+
+      - run: echo "${{ secrets.ORACLE_SSH_KEY }}" > db_key.pem && chmod 600 db_key.pem
+
+      - name: Copy and Deploy
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i db_key.pem mysql-deploy/docker-compose.yml ubuntu@${{ secrets.ORACLE_DB_HOST }}:/home/ubuntu/
+          ssh -o StrictHostKeyChecking=no -i db_key.pem ubuntu@${{ secrets.ORACLE_DB_HOST }} << EOF
+            cd /home/ubuntu
+            echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" > .env
+            echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+            docker compose --env-file .env up -d
+          EOF
+
+  deploy-app:
+    name: Deploy App to App Server
+    runs-on: ubuntu-latest
+    needs: [build-and-push, deploy-db]
+    steps:
+      - uses: actions/checkout@v3
 
       - name: Set up SSH
         run: |
@@ -46,10 +65,9 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add private_key.pem
 
-      - name: Copy files to Oracle
+      - name: Copy and Deploy
         run: |
           scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml ubuntu@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
-
       - name: Deploy via SSH with environment variables
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
@@ -88,14 +106,8 @@ jobs:
             # 현재 실행 중인 컨테이너 중지
             sudo docker compose down --remove-orphans
           
-            # 사용하지 않는 리소스 정리
-            echo "이전 이미지 정리 중..."
             # 현재 이미지 제외하고 모든 dangling 이미지 삭제
             sudo docker image prune -f
-          
-            # 디스크 용량 확인
-            echo "디스크 사용량 확인: "
-            df -h /
           
             # 이미지 내려받기 및 컨테이너 시작
             sudo docker compose pull
@@ -111,10 +123,6 @@ jobs:
           
             # 배포 후 미사용 볼륨 정리
             sudo docker volume prune -f
-          
-            # 최종 디스크 사용량 확인
-            echo "정리 후 디스크 사용량: "
-            df -h /
           
             # Docker 이미지 상태 확인
             echo "현재 Docker 이미지 상태:"
