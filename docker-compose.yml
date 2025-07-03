@@ -1,0 +1,66 @@
+services:
+  app:
+    container_name: mainichi-nihongo
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_IMAGE_TAG_NAME}:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SMTP_EMAIL: ${SMTP_EMAIL}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      SERVER_URL: ${SERVER_URL}
+      GOOGLE_APPLICATION_CREDENTIALS: /credentials/mainichi-nihongo-460709-dbe1b498b089.json
+      VIRTUAL_HOST: mainichi-nihongo.com,www.mainichi-nihongo.com
+      LETSENCRYPT_HOST: mainichi-nihongo.com,www.mainichi-nihongo.com
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/ubuntu/api:/credentials:ro
+    networks:
+      - nginx-proxy
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: nginxproxy/nginx-proxy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx_certs:/etc/nginx/certs:ro
+      - nginx_vhost:/etc/nginx/vhost.d
+      - nginx_html:/usr/share/nginx/html
+    networks:
+      - nginx-proxy
+
+  letsencrypt:
+    container_name: letsencrypt
+    image: nginxproxy/acme-companion:latest
+    restart: always
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - nginx_certs:/etc/nginx/certs:rw
+      - nginx_vhost:/etc/nginx/vhost.d
+      - nginx_html:/usr/share/nginx/html
+      - nginx_acme:/etc/acme.sh
+    environment:
+      NGINX_PROXY_CONTAINER: nginx-proxy
+    networks:
+      - nginx-proxy
+
+volumes:
+  nginx_certs:
+  nginx_vhost:
+  nginx_html:
+  nginx_acme:
+
+networks:
+  nginx-proxy:
+    driver: bridge

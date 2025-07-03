@@ -1,0 +1,130 @@
+name: Deploy to Oracle
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        run: docker buildx create --use
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Multi-Arch Docker Image
+        run : |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_IMAGE_TAG_NAME }}:latest \
+            --push .
+
+  deploy-db:
+    name: Deploy MySQL to DB Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: echo "${{ secrets.ORACLE_SSH_KEY }}" > db_key.pem && chmod 600 db_key.pem
+
+      - name: Copy and Deploy
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i db_key.pem mysql-deploy/docker-compose.yml ubuntu@${{ secrets.ORACLE_DB_HOST }}:/home/ubuntu/
+          ssh -o StrictHostKeyChecking=no -i db_key.pem ubuntu@${{ secrets.ORACLE_DB_HOST }} << EOF
+            cd /home/ubuntu
+            echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" > .env
+            echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+            docker compose --env-file .env up -d
+          EOF
+
+  deploy-app:
+    name: Deploy App to App Server
+    runs-on: ubuntu-latest
+    needs: [build-and-push, deploy-db]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up SSH
+        run: |
+          echo "${{ secrets.ORACLE_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          eval "$(ssh-agent -s)"
+          ssh-add private_key.pem
+
+      - name: Copy and Deploy
+        run: |
+          scp -o StrictHostKeyChecking=no -i private_key.pem docker-compose.yml ubuntu@${{ secrets.ORACLE_HOST }}:/home/ubuntu/
+      - name: Deploy via SSH with environment variables
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_IMAGE_TAG_NAME: ${{ vars.DOCKERHUB_IMAGE_TAG_NAME }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          LETSENCRYPT_EMAIL: ${{ secrets.LETSENCRYPT_EMAIL }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.ORACLE_HOST }} << EOF
+            cd /home/ubuntu
+          
+            echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}" > .env
+            echo "DOCKERHUB_IMAGE_TAG_NAME=${DOCKERHUB_IMAGE_TAG_NAME}" >> .env
+            echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
+            echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+            echo "DB_URL=${DB_URL}" >> .env
+            echo "DB_USER=${DB_USER}" >> .env
+            echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+            echo "SMTP_EMAIL=${SMTP_EMAIL}" >> .env
+            echo "SMTP_PASSWORD=${SMTP_PASSWORD}" >> .env
+            echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
+            echo "SERVER_URL=${SERVER_URL}" >> .env
+            echo "LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}" >> .env
+          
+            echo "환경 변수 확인:"
+            cat .env | grep DOCKERHUB
+            cat docker-compose.yml
+          
+            # 현재 실행 중인 컨테이너 중지
+            sudo docker compose down --remove-orphans
+          
+            # 현재 이미지 제외하고 모든 dangling 이미지 삭제
+            sudo docker image prune -f
+          
+            # 이미지 내려받기 및 컨테이너 시작
+            sudo docker compose pull
+            sudo docker compose up -d --force-recreate
+          
+            # Let's Encrypt 인증서 발급 대기 (최대 2분)
+            echo "Let's Encrypt 인증서 발급 대기 중..."
+            sleep 120
+          
+            # 인증서 상태 확인
+            echo "인증서 상태 확인:"
+            sudo docker logs letsencrypt
+          
+            # 배포 후 미사용 볼륨 정리
+            sudo docker volume prune -f
+          
+            # Docker 이미지 상태 확인
+            echo "현재 Docker 이미지 상태:"
+            sudo docker image ls | grep "${DOCKERHUB_USERNAME}/${DOCKERHUB_IMAGE_TAG_NAME}"
+          EOF

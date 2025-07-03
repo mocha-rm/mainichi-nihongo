@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>마이니치 니홍고 - 오늘의 일본어</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        
+        .tts-button {
+            text-decoration: none;
+            color: #666;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+        
+        .tts-button:hover {
+            color: #ff6b6b;
+        }
+        
+        .japanese-text {
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Noto Sans KR', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <!-- 헤더 -->
+    <div style="background: linear-gradient(135deg, #ff6b6b, #ffa726); padding: 25px; text-align: center; border-radius: 15px 15px 0 0; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; animation: float 3s ease-in-out infinite;"></div>
+        <div style="position: absolute; bottom: -30px; left: -30px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; animation: float 4s ease-in-out infinite reverse;"></div>
+
+        <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+            🌸 마이니치 니홍고 🌸
+        </h1>
+        <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; font-weight: 300;">
+            매일 새로운 일본어와 만나는 시간! - ${date}
+        </p>
+        <div style="margin-top: 15px;">
+            <span style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; color: white; font-size: 12px; margin: 0 5px;">
+                🗾 일본 문화
+            </span>
+            <span style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; color: white; font-size: 12px; margin: 0 5px;">
+                💬 방언 탐방
+            </span>
+            <span style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; color: white; font-size: 12px; margin: 0 5px;">
+                📚 오늘의 단어
+            </span>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div style="background: white; padding: 30px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;">
+        ${content}
+
+        <!-- 마무리 섹션 -->
+        <div style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center;">
+            <p style="color: white; margin: 0; font-size: 16px; font-weight: 500;">
+                🎯 내일도 함께 일본어 모험을 떠나요!
+            </p>
+            <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0 0; font-size: 14px;">
+                매일 조금씩, 확실하게 성장하는 우리 💪
+            </p>
+        </div>
+
+        <hr style="border: none; border-top: 2px solid #f0f0f0; margin: 30px 0 20px;">
+
+        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <p style="font-size: 14px; line-height: 1.6; color: #666; margin: 0;">
+                🌟 <strong>마이니치 니홍고</strong>는 매일 새로운 일본어와 문화를 전해드립니다<br>
+                더 이상 받아보고 싶지 않으시다면
+                <a href="${unsubscribeUrl}" style="color: #ff6b6b; text-decoration: none; font-weight: 500;">
+                    여기서 구독해지
+                </a>해주세요 😊
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+</style>
+</body>
+</html>
