@@ -41,6 +41,12 @@ public class SubscribeService {
         return subscriberRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Subscriber getSubscriber(String email) {
+        return subscriberRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유효하지 않은 이메일입니다."));
+    }
+
     public long getSubscribersCount() {
         return subscriberRepository.getCountOfSubscribers();
     }

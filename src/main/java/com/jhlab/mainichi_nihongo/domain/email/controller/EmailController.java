@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,4 +29,11 @@ public class EmailController {
         emailScheduler.sendDailyEmailToSubscribers();
         return new ResponseEntity<>("이메일 발송을 시작하였습니다.", HttpStatus.OK);
     }
+
+    @PostMapping("/send-daily-email")
+    public ResponseEntity<String> sendDailyEmail(@RequestParam String email) {
+        emailScheduler.sendDailyEmailToSubscriber(email);
+        return new ResponseEntity<>("이메일 발송을 시작하였습니다.", HttpStatus.OK);
+    }
+
 }
