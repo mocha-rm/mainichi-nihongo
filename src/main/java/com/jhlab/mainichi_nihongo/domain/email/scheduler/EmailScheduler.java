@@ -49,4 +49,31 @@ public class EmailScheduler {
 
         log.info("일일 이메일 발송 완료 - 성공: {}, 실패: {}", successCount, failCount);
     }
+
+    public void sendDailyEmailToSubscriber(String email) {
+        log.info("일일 이메일 발송 작업 시작: {}", LocalDateTime.now());
+
+        Subscriber subscriber = subscribeService.getSubscriber(email);
+
+        if (subscriber == null) {
+            log.info("이메일 발송을 건너뜁니다.");
+            return;
+        }
+
+        String subject = "마이니치 니홍고 - 오늘의 일본어 학습";
+        String content = contentService.generateDailyContent();
+
+        int successCount = 0;
+        int failCount = 0;
+
+        boolean sent = emailService.sendEmail(subscriber.getEmail(), subject, content);
+
+        if (sent) {
+            successCount++;
+        } else {
+            failCount++;
+        }
+
+        log.info("이메일 발송 완료 - 성공: {}, 실패: {}", successCount, failCount);
+    }
 }

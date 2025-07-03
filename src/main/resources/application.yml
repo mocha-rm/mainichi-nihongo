@@ -22,7 +22,7 @@ spring:
         format_sql: 'true'
         show_sql: 'true'
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -39,6 +39,9 @@ spring:
       leak-detection-threshold: 60000
 
 server:
+  servlet:
+    session:
+      tracking-modes: cookie
   port: 8080
   error:
     include-message: always
