@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface EmailContentRepository extends JpaRepository<EmailContent, Long> {
@@ -22,8 +23,8 @@ public interface EmailContentRepository extends JpaRepository<EmailContent, Long
     /**
      * 특정 날짜 범위에 생성된 이메일 콘텐츠를 찾습니다.
      */
-    @Query("SELECT DISTINCT e FROM EmailContent e JOIN FETCH e.theme WHERE e.createdAt BETWEEN ?1 AND ?2")
-    Optional<EmailContent> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    @Query("SELECT DISTINCT e FROM EmailContent e JOIN FETCH e.theme WHERE e.createdAt BETWEEN ?1 AND ?2 ORDER BY e.createdAt ASC")
+    List<EmailContent> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     /**
      * 마지막으로 발송된 이메일 콘텐츠를 가져옵니다.
