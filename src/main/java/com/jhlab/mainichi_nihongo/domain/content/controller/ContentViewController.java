@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * 날짜별 콘텐츠를 보여주는 전용 컨트롤러
@@ -33,10 +33,10 @@ public class ContentViewController {
             LocalDateTime startOfDay = targetDate.atStartOfDay();
             LocalDateTime endOfDay = targetDate.atTime(23, 59, 59);
 
-            Optional<EmailContent> content = emailContentRepository.findByCreatedDateBetween(startOfDay, endOfDay);
+            List<EmailContent> content = emailContentRepository.findByCreatedDateBetween(startOfDay, endOfDay);
             
-            if (content.isPresent()) {
-                EmailContent emailContent = content.get();
+            if (!content.isEmpty()) {
+                EmailContent emailContent = content.get(0);
                 String formattedDate = emailContent.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
                 String detailedContent;
