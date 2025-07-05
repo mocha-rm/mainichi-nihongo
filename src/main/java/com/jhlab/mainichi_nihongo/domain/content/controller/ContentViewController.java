@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -30,10 +29,14 @@ public class ContentViewController {
     public String showContentByDate(@PathVariable String date, Model model) {
         try {
             LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
-            LocalDateTime startOfDay = targetDate.atStartOfDay();
-            LocalDateTime endOfDay = targetDate.atTime(23, 59, 59);
 
-            List<EmailContent> content = emailContentRepository.findByCreatedDateBetween(startOfDay, endOfDay);
+            ZonedDateTime startOfDay = targetDate.atStartOfDay(ZoneOffset.UTC);
+            ZonedDateTime endOfDay = targetDate.atTime(23, 59, 59).atZone(ZoneOffset.UTC);
+
+            List<EmailContent> content = emailContentRepository.findByCreatedDateBetween(
+                    startOfDay.toLocalDateTime(),
+                    endOfDay.toLocalDateTime()
+            );
             
             if (!content.isEmpty()) {
                 EmailContent emailContent = content.get(0);

@@ -10,13 +10,15 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class MainichiNihongoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MainichiNihongoApplication.class, args);
-	}
-
 	@PostConstruct
 	public void init() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+
 		System.out.println("JVM TimeZone: " + TimeZone.getDefault().getID());
 		System.out.println("createdAt: " + LocalDateTime.now());
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(MainichiNihongoApplication.class, args);
 	}
 }
