@@ -22,7 +22,7 @@ public interface EmailContentRepository extends JpaRepository<EmailContent, Long
     /**
      * 특정 날짜 범위에 생성된 이메일 콘텐츠를 찾습니다.
      */
-    @Query("SELECT e FROM EmailContent e JOIN FETCH e.theme WHERE e.createdAt BETWEEN ?1 AND ?2")
+    @Query("SELECT DISTINCT e FROM EmailContent e JOIN FETCH e.theme WHERE e.createdAt BETWEEN ?1 AND ?2")
     Optional<EmailContent> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     /**
