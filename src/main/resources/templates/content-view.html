@@ -194,22 +194,8 @@
 
     <script>
         function playTTS(text) {
-            console.log('TTS 재생 시도:', text);
-            const audioUrl = `/api/tts/audio?text=${encodeURIComponent(text)}`;
-            console.log('오디오 URL:', audioUrl);
-            
-            const audio = new Audio(audioUrl);
-            
-            audio.addEventListener('loadstart', () => console.log('오디오 로딩 시작'));
-            audio.addEventListener('canplay', () => console.log('오디오 재생 가능'));
-            audio.addEventListener('error', (e) => console.error('오디오 로딩 오류:', e));
-            
-            audio.play().then(() => {
-                console.log('TTS 재생 성공');
-            }).catch(error => {
-                console.error('TTS 재생 중 오류:', error);
-                alert('TTS 재생에 실패했습니다. 다시 시도해주세요.');
-            });
+            const audio = new Audio(`/api/tts/audio?text=${encodeURIComponent(text)}&speaker=7`);
+            audio.play();
         }
     </script>
 </body>

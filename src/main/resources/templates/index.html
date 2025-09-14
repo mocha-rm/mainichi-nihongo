@@ -725,11 +725,8 @@
         }
 
         function playTTS(text) {
-            const audio = new Audio(`/api/tts/audio?text=${encodeURIComponent(text)}`);
-            audio.play().catch(error => {
-                console.error('TTS 재생 중 오류:', error);
-                alert('TTS 재생에 실패했습니다. 다시 시도해주세요.');
-            });
+            const audio = new Audio(`/api/tts/audio?text=${encodeURIComponent(text)}&speaker=7`);
+            audio.play();
         }
     </script>
 </body>
