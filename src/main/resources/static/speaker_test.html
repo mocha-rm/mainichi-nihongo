@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>VOICEVOX 화자 테스트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .container {
+        width: 100%;
+        max-width: 800px;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #1a2c5b;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 0.5rem;
+        margin-top: 0;
+    }
+    .input-group {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+    #text-to-speak {
+        flex-grow: 1;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .speaker-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+    .speaker-card {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+    .speaker-card h3 {
+        margin: 0 0 1rem 0;
+        color: #0056b3;
+        text-align: center;
+    }
+    .styles {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .styles button {
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        background-color: #007bff;
+        color: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .styles button:hover {
+        background-color: #0056b3;
+    }
+    .styles button.playing {
+        background-color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🔊 VOICEVOX 화자 테스트</h1>
+  <div class="input-group">
+    <input type="text" id="text-to-speak" value="こんにちは、ボイスボックスのテスト中です。">
+  </div>
+  <div id="speaker-list" class="speaker-list">
+    <p>화자 목록을 불러오는 중...</p>
+  </div>
+</div>
+
+<script>
+  const speakerListDiv = document.getElementById('speaker-list');
+  const textInput = document.getElementById('text-to-speak');
+
+  // 페이지 로드 시 화자 목록을 가져옵니다.
+  window.onload = fetchSpeakers;
+
+  // /api/tts/speakers API를 호출하여 화자 목록을 가져오는 함수
+  async function fetchSpeakers() {
+      try {
+          const response = await fetch('/api/tts/speakers');
+          if (!response.ok) {
+              throw new Error('서버에서 화자 목록을 가져오는 데 실패했습니다.');
+          }
+          const speakers = await response.json();
+          displaySpeakers(speakers);
+      } catch (error) {
+          speakerListDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
+          console.error(error);
+      }
+  }
+
+  // 가져온 화자 목록을 화면에 표시하는 함수
+  function displaySpeakers(speakers) {
+      speakerListDiv.innerHTML = ''; // 기존 내용 삭제
+      speakers.forEach(speaker => {
+          const card = document.createElement('div');
+          card.className = 'speaker-card';
+
+          const name = document.createElement('h3');
+          name.textContent = speaker.name;
+          card.appendChild(name);
+
+          const stylesDiv = document.createElement('div');
+          stylesDiv.className = 'styles';
+
+          speaker.styles.forEach(style => {
+              const button = document.createElement('button');
+              button.textContent = `${style.name} (ID: ${style.id})`;
+              button.onclick = (event) => playTTS(style.id, event.target);
+              stylesDiv.appendChild(button);
+          });
+
+          card.appendChild(stylesDiv);
+          speakerListDiv.appendChild(card);
+      });
+  }
+
+  let currentAudio = null;
+  let currentButton = null;
+
+  // 선택한 목소리로 TTS를 재생하는 함수
+  function playTTS(speakerId, buttonElement) {
+      if (currentAudio) {
+          currentAudio.pause(); // 이전에 재생중인 오디오 정지
+      }
+      if (currentButton) {
+          currentButton.classList.remove('playing');
+          currentButton.textContent = currentButton.textContent.replace(' (재생 중...)', '');
+      }
+
+      const text = textInput.value;
+      if (!text.trim()) {
+          alert('재생할 텍스트를 입력하세요.');
+          return;
+      }
+
+      const encodedText = encodeURIComponent(text);
+      const audioUrl = `/api/tts/audio?text=${encodedText}&speakerId=${speakerId}`;
+
+      currentAudio = new Audio(audioUrl);
+      currentButton = buttonElement;
+
+      buttonElement.classList.add('playing');
+      const originalText = buttonElement.textContent;
+      buttonElement.textContent += ' (재생 중...)';
+
+      currentAudio.play();
+
+      currentAudio.onended = () => {
+          buttonElement.classList.remove('playing');
+          buttonElement.textContent = originalText;
+          currentAudio = null;
+          currentButton = null;
+      };
+      currentAudio.onerror = () => {
+          alert('오디오를 재생하는 중 오류가 발생했습니다.');
+          buttonElement.classList.remove('playing');
+          buttonElement.textContent = originalText;
+          currentAudio = null;
+          currentButton = null;
+      };
+  }
+</script>
+
+</body>
+</html>

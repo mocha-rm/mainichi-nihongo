@@ -1,3 +1,14 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+    session:
+      tracking-modes: cookie
+  port: 8080
+  error:
+    include-message: always
+
 spring:
   application:
     name: mainichi_nihongo
@@ -38,14 +49,6 @@ spring:
       max-lifetime: 1200000
       leak-detection-threshold: 60000
 
-server:
-  servlet:
-    session:
-      tracking-modes: cookie
-  port: 8080
-  error:
-    include-message: always
-
 gemini:
   api-key: ${GEMINI_API_KEY}
   url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
@@ -53,7 +56,8 @@ gemini:
 app:
   server-url: ${SERVER_URL}
 
-google:
-  cloud:
-    text-to-speech:
-      credentials: ${GOOGLE_APPLICATION_CREDENTIALS}
+voicevox:
+  base-url: ${VOICEVOX_URL:http://localhost:50021}
+  speaker-id: ${VOICEVOX_SPEAKER_ID:2}
+  timeout: ${VOICEVOX_TIMEOUT:30}  # HTTP 요청 타임아웃 (초)
+  retry-attempts: ${VOICEVOX_RETRY:3}  # 재시도 횟수
