@@ -1,5 +1,7 @@
 package com.jhlab.mainichi_nihongo.domain.content.service;
 
+import com.jhlab.mainichi_nihongo.domain.content.dto.ContentItemDto;
+import com.jhlab.mainichi_nihongo.domain.content.dto.ContentListResponseDto;
 import com.jhlab.mainichi_nihongo.domain.content.entity.ContentTheme;
 import com.jhlab.mainichi_nihongo.domain.content.repository.ContentThemeRepository;
 import com.jhlab.mainichi_nihongo.domain.email.entity.EmailContent;
@@ -8,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -145,5 +151,20 @@ public class ContentService {
         }
 
         log.info("총 {}개의 테마가 초기화되었습니다.", JLPT_LEVELS.size() * TOPICS.size());
+    }
+
+    @Transactional(readOnly = true)
+    public ContentListResponseDto findAllContents(Pageable pageable) {
+        Pageable sortedByCreatedAtDesc = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by("createdAt").descending()
+        );
+
+        Page<EmailContent> contentPage = emailContentRepository.findAll(sortedByCreatedAtDesc);
+
+        Page<ContentItemDto> dtoPage = contentPage.map(ContentItemDto::from);
+
+        return ContentListResponseDto.from(dtoPage);
     }
 }
