@@ -17,11 +17,14 @@ public class SecurityConfig {
     private final CorsProperties corsProperties;
 
     public static final String[] WHITE_LIST = {
-      "/",
-      "/api/subscribe",
-      "/api/unsubscribe",
-      "/api/subscribers"
+            "/",
+            "/api/subscribe",
+            "/api/unsubscribe",
+            "/api/subscribers",
+            "/api/contents/**"
     };
+
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
