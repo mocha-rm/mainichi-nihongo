@@ -18,7 +18,7 @@ public class ContentListController {
     private final ContentService contentService;
 
     @GetMapping("/list")
-    public ResponseEntity<ContentListResponseDto> findAllContents(@PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<ContentListResponseDto> findAllContents(@PageableDefault(size = 8) Pageable pageable) {
         ContentListResponseDto responseDto = contentService.findAllContents(pageable);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
