@@ -154,14 +154,27 @@ public class ContentService {
     }
 
     @Transactional(readOnly = true)
-    public ContentListResponseDto findAllContents(Pageable pageable) {
-        Pageable sortedByCreatedAtDesc = PageRequest.of(
+    public ContentListResponseDto findAllContents(
+            Pageable pageable,
+            String jlptLevel,
+            String topic,
+            String sortOrder
+    ) {
+        Sort.Direction direction = "등록일순".equalsIgnoreCase(sortOrder)
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+
+        Pageable sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                Sort.by("createdAt").descending()
+                Sort.by(direction, "createdAt")
         );
 
-        Page<EmailContent> contentPage = emailContentRepository.findAll(sortedByCreatedAtDesc);
+        Page<EmailContent> contentPage = emailContentRepository.findAllWithFilters(
+                jlptLevel,
+                topic,
+                sortedPageable
+        );
 
         Page<ContentItemDto> dtoPage = contentPage.map(ContentItemDto::from);
 
