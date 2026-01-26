@@ -24,6 +24,36 @@ spring:
           starttls:
             enable: true
     default-encoding: UTF-8
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-url: https://kauth.kakao.com/oauth/authorize
+            token-url: https://kauth.kakao.com/oauth/token
+            user-info-url: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
   jpa:
     properties:
@@ -48,6 +78,11 @@ spring:
       idle-timeout: 300000
       max-lifetime: 1200000
       leak-detection-threshold: 60000
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiry: 3600000
+  refresh-token-expiry: 604800000
 
 gemini:
   api-key: ${GEMINI_API_KEY}
