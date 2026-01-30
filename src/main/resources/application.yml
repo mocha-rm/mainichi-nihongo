@@ -90,6 +90,7 @@ gemini:
 
 app:
   server-url: ${SERVER_URL}
+  frontend-url: ${FRONTEND_URL}
 
 voicevox:
   base-url: ${VOICEVOX_URL:http://localhost:50021}
