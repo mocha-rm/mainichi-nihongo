@@ -26,9 +26,9 @@ spring:
     default-encoding: UTF-8
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
   security:
     oauth2:
       client:
@@ -47,12 +47,12 @@ spring:
             client-authentication-method: client_secret_post
             scope:
               - profile_nickname
-              - account_email
+              - profile_image
         provider:
           kakao:
-            authorization-url: https://kauth.kakao.com/oauth/authorize
-            token-url: https://kauth.kakao.com/oauth/token
-            user-info-url: https://kapi.kakao.com/v2/user/me
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
   jpa:
@@ -90,13 +90,13 @@ gemini:
 
 app:
   server-url: ${SERVER_URL}
-  frontend-url: ${FRONTEND_URL}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
 
 voicevox:
   base-url: ${VOICEVOX_URL:http://localhost:50021}
   speaker-id: ${VOICEVOX_SPEAKER_ID:2}
-  timeout: ${VOICEVOX_TIMEOUT:30}  # HTTP 요청 타임아웃 (초)
-  retry-attempts: ${VOICEVOX_RETRY:3}  # 재시도 횟수
+  timeout: ${VOICEVOX_TIMEOUT:30}
+  retry-attempts: ${VOICEVOX_RETRY:3}
 
 cors:
   allowed-origins:

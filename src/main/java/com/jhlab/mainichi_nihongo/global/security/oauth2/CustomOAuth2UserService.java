@@ -45,8 +45,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User saveOrUpdate(OAuth2UserInfo userInfo) {
-        Optional<User> existingUser =
-                userRepository.findByProviderAndProviderId(userInfo.getProvider(), userInfo.getProviderId());
+        Optional<User> existingUser = userRepository.findByProviderAndProviderId(userInfo.getProvider(),
+                userInfo.getProviderId());
 
         if (existingUser.isPresent()) {
             User user = existingUser.get();
