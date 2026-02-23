@@ -15,6 +15,14 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       SERVER_URL: ${SERVER_URL}
       FRONTEND_URL: ${FRONTEND_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       GOOGLE_APPLICATION_CREDENTIALS: /credentials/mainichi-nihongo-460709-dbe1b498b089.json
       VIRTUAL_HOST: api.mainichi-nihongo.com
       LETSENCRYPT_HOST: api.mainichi-nihongo.com
@@ -22,6 +30,20 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /home/ubuntu/api:/credentials:ro
+    depends_on:
+      - redis
+    networks:
+      - nginx-proxy
+
+  redis:
+    container_name: redis
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - nginx-proxy
 
@@ -58,6 +80,7 @@ services:
       - nginx-proxy
 
 volumes:
+  redis_data:
   nginx_certs:
   nginx_vhost:
   nginx_html:
