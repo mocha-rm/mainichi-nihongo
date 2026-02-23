@@ -14,9 +14,10 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       SERVER_URL: ${SERVER_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
       GOOGLE_APPLICATION_CREDENTIALS: /credentials/mainichi-nihongo-460709-dbe1b498b089.json
-      VIRTUAL_HOST: mainichi-nihongo.com,www.mainichi-nihongo.com
-      LETSENCRYPT_HOST: mainichi-nihongo.com,www.mainichi-nihongo.com
+      VIRTUAL_HOST: api.mainichi-nihongo.com
+      LETSENCRYPT_HOST: api.mainichi-nihongo.com
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
       - /etc/localtime:/etc/localtime:ro

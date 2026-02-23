@@ -103,3 +103,4 @@ cors:
     - "http://localhost:3000"
     - "https://mainichi-nihongo.com"
     - "https://www.mainichi-nihongo.com"
+    - "https://api.mainichi-nihongo.com"
