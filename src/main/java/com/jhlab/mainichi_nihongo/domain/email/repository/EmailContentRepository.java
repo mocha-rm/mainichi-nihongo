@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmailContentRepository extends JpaRepository<EmailContent, Long> {
+public interface EmailContentRepository extends JpaRepository<EmailContent, Long>, EmailContentRepositoryCustom {
     /**
      * 아직 발송되지 않은 가장 최근에 생성된 이메일 콘텐츠를 가져옵니다.
      */

@@ -24,6 +24,36 @@ spring:
           starttls:
             enable: true
     default-encoding: UTF-8
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - profile_nickname
+              - profile_image
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
   jpa:
     properties:
@@ -49,15 +79,28 @@ spring:
       max-lifetime: 1200000
       leak-detection-threshold: 60000
 
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiry: 3600000
+  refresh-token-expiry: 604800000
+
 gemini:
   api-key: ${GEMINI_API_KEY}
   url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
 
 app:
   server-url: ${SERVER_URL}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
 
 voicevox:
   base-url: ${VOICEVOX_URL:http://localhost:50021}
   speaker-id: ${VOICEVOX_SPEAKER_ID:2}
-  timeout: ${VOICEVOX_TIMEOUT:30}  # HTTP 요청 타임아웃 (초)
-  retry-attempts: ${VOICEVOX_RETRY:3}  # 재시도 횟수
+  timeout: ${VOICEVOX_TIMEOUT:30}
+  retry-attempts: ${VOICEVOX_RETRY:3}
+
+cors:
+  allowed-origins:
+    - "http://localhost:3000"
+    - "https://mainichi-nihongo.com"
+    - "https://www.mainichi-nihongo.com"
+    - "https://api.mainichi-nihongo.com"

@@ -30,31 +30,11 @@ jobs:
             -t ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_IMAGE_TAG_NAME }}:latest \
             --push .
 
-  deploy-db:
-    name: Deploy MySQL to DB Server
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - run: echo "${{ secrets.ORACLE_SSH_KEY }}" > db_key.pem && chmod 600 db_key.pem
-
-      - name: Copy and Deploy
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-        run: |
-          scp -o StrictHostKeyChecking=no -i db_key.pem mysql-deploy/docker-compose.yml ubuntu@${{ secrets.ORACLE_DB_HOST }}:/home/ubuntu/
-          ssh -o StrictHostKeyChecking=no -i db_key.pem ubuntu@${{ secrets.ORACLE_DB_HOST }} << EOF
-            cd /home/ubuntu
-            echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" > .env
-            echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
-            docker compose --env-file .env up -d
-          EOF
 
   deploy-app:
     name: Deploy App to App Server
     runs-on: ubuntu-latest
-    needs: [build-and-push, deploy-db]
+    needs: [build-and-push]
     steps:
       - uses: actions/checkout@v3
 
@@ -82,6 +62,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
           LETSENCRYPT_EMAIL: ${{ secrets.LETSENCRYPT_EMAIL }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.ORACLE_HOST }} << EOF
             cd /home/ubuntu
@@ -98,6 +79,7 @@ jobs:
             echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
             echo "SERVER_URL=${SERVER_URL}" >> .env
             echo "LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}" >> .env
+            echo "FRONTEND_URL=${FRONTEND_URL}" >> .env
           
             echo "환경 변수 확인:"
             cat .env | grep DOCKERHUB

@@ -18,7 +18,7 @@ import java.util.List;
  * 날짜별 콘텐츠를 보여주는 전용 컨트롤러
  */
 @Controller
-@RequestMapping("/contents")
+@RequestMapping("/api/contents")
 @RequiredArgsConstructor
 @Slf4j
 public class ContentViewController {
