@@ -6,7 +6,7 @@ COPY . /apps
 
 RUN gradle clean build --no-daemon --parallel
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre-jammy
 
 LABEL type="application"
 
