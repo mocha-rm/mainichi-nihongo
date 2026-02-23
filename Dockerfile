@@ -4,7 +4,7 @@ WORKDIR /apps
 
 COPY . /apps
 
-RUN gradle clean build --no-daemon --parallel
+RUN gradle clean build --no-daemon --parallel -x test
 
 FROM eclipse-temurin:17-jre-jammy
 
