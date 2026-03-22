@@ -30,4 +30,16 @@ public interface EmailContentRepository extends JpaRepository<EmailContent, Long
      * 마지막으로 발송된 이메일 콘텐츠를 가져옵니다.
      */
     Optional<EmailContent> findTopBySentTrueOrderBySentAtDesc();
+
+    /**
+     * 특정 날짜 이전의 가장 최신 콘텐츠를 찾습니다.
+     */
+    @Query("SELECT e FROM EmailContent e JOIN FETCH e.theme WHERE DATE(e.createdAt) < DATE(?1) ORDER BY e.createdAt DESC LIMIT 1")
+    Optional<EmailContent> findPreviousContent(LocalDateTime dateTime);
+
+    /**
+     * 특정 날짜 이후의 가장 오래된 콘텐츠를 찾습니다.
+     */
+    @Query("SELECT e FROM EmailContent e JOIN FETCH e.theme WHERE DATE(e.createdAt) > DATE(?1) ORDER BY e.createdAt ASC LIMIT 1")
+    Optional<EmailContent> findNextContent(LocalDateTime dateTime);
 }

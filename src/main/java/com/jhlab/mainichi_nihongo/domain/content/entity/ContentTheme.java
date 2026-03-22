@@ -36,6 +36,7 @@ public class ContentTheme {
     }
 
     public void markAsUsed() {
+
         this.used = true;
         this.usedAt = LocalDateTime.now();
     }
